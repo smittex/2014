@@ -1,0 +1,11 @@
+<h1>I'm the <span class="label label-danger">Help</span> page.</h1>
+
+<form name="sendemail">
+
+  <input class="form-control" type="text" ng-model="contactus.from" placeholder="Your email" /><br />
+  <input class="form-control" type="text" ng-model="contactus.subject" placeholder="Subject" /><br />
+  <input class="form-control" type="text" ng-model="contactus.body" placeholder="Body" /><br />
+
+  <button class="btn btn-primary" type="submit" ng-click="sendEmail()" />Send</button>
+</form>
+

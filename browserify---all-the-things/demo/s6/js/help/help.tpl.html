@@ -1,0 +1,29 @@
+<h1>I'm the <span class="label label-danger">Help</span> page.</h1>
+
+<form name="sendemail">
+
+  <input class="form-control" type="text" ng-model="contactus.from" placeholder="Your email" /><br />
+  <input class="form-control" type="text" ng-model="contactus.subject" placeholder="Subject" /><br />
+  <input class="form-control" type="text" ng-model="contactus.body" placeholder="Body" /><br />
+
+  <button class="btn btn-primary" type="submit" ng-click="sendEmail()" />Send</button>
+</form>
+
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Blocked</th>
+  </thead>
+  <tbody>
+    <tr ng-repeat="c in characters">
+      <td>{{c.name}}</td>
+      <td>{{c.age}}</td>
+      <td>{{c.blocked}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1>There are <span class="label label-success">{{findEmAll()}}</span> characters that are 36</h1>
