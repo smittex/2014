@@ -6,6 +6,4 @@ By Will Buck
 
 [willbuck](https://www.github.com/willbuck) on github
 
-Slide pdf included here, but you can go through the Reveal.js Slidedeck a little nicer at
-
-[my github](https://willbuck.github.io/AngularProjectPostmortem)
+Slide pdf included here, but you can go through the Reveal.js Slidedeck a little nicer at [my github](https://willbuck.github.io/AngularProjectPostmortem)
