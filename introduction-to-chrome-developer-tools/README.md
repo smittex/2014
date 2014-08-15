@@ -1,8 +1,8 @@
-## Introduction to Chrome Developer Tools Talk MidwestJS 2014
+### Introduction to Chrome Developer Tools Talk MidwestJS 2014 ###
 
 Contents:
 
-1. Source Maven Project for the talk
-2. Corresponding Slides
+*   Source Maven Project for the talk
+*   Corresponding Slides
 
-- Sony
+__Sony Seng__
