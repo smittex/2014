@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<!-- saved from url=(0025)http://promisesaplus.com/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Promises/A+</title>
+
+    
+
+    <script>
+      "use strict";
+      if (location.href.indexOf("github.io") !== -1) {
+        location.href = "http://promisesaplus.com/";
+      }
+    </script>
+
+    <link rel="stylesheet" href="http://promisesaplus.com/assets/stylesheet.css">
+    <link rel="shortcut icon" href="http://promisesaplus.com/assets/favicon.ico">
+
+    <link rel="canonical" href="saved_resource.html">
+  <style type="text/css"></style></head>
+
+  <body class="spec hasGoogleVoiceExt">
+    <h1>Promises/A+</h1>
+
+<p id="point-1"><a href="http://promisesaplus.com/#point-1" class="anchor"></a><strong>An open standard for sound, interoperable JavaScript promises—by implementers, for implementers.</strong></p>
+
+<p id="point-2"><a href="http://promisesaplus.com/#point-2" class="anchor"></a>A <em>promise</em> represents the eventual result of an asynchronous operation. The primary way of interacting with a promise is through its <code>then</code> method, which registers callbacks to receive either a promise’s eventual value or the reason why the promise cannot be fulfilled.</p>
+
+<p id="point-3"><a href="http://promisesaplus.com/#point-3" class="anchor"></a>This specification details the behavior of the <code>then</code> method, providing an interoperable base which all Promises/A+ conformant promise implementations can be depended on to provide. As such, the specification should be considered very stable. Although the Promises/A+ organization may occasionally revise this specification with minor backward-compatible changes to address newly-discovered corner cases, we will integrate large or backward-incompatible only after careful consideration, discussion, and testing.</p>
+
+<p id="point-4"><a href="http://promisesaplus.com/#point-4" class="anchor"></a>Historically, Promises/A+ clarifies the behavioral clauses of the earlier <a href="http://wiki.commonjs.org/wiki/Promises/A">Promises/A proposal</a>, extending it to cover <em>de facto</em> behaviors and omitting parts that are underspecified or problematic.</p>
+
+<p id="point-5"><a href="http://promisesaplus.com/#point-5" class="anchor"></a>Finally, the core Promises/A+ specification does not deal with how to create, fulfill, or reject promises, choosing instead to focus on providing an interoperable <code>then</code> method. Future work in companion specifications may touch on these subjects.</p>
+
+<h2>Terminology</h2>
+
+<ol>
+<li id="point-6"><a href="http://promisesaplus.com/#point-6" class="anchor"></a>“promise” is an object or function with a <code>then</code> method whose behavior conforms to this specification.</li>
+<li id="point-7"><a href="http://promisesaplus.com/#point-7" class="anchor"></a>“thenable” is an object or function that defines a <code>then</code> method.</li>
+<li id="point-8"><a href="http://promisesaplus.com/#point-8" class="anchor"></a>“value” is any legal JavaScript value (including <code>undefined</code>, a thenable, or a promise).</li>
+<li id="point-9"><a href="http://promisesaplus.com/#point-9" class="anchor"></a>“exception” is a value that is thrown using the <code>throw</code> statement.</li>
+<li id="point-10"><a href="http://promisesaplus.com/#point-10" class="anchor"></a>“reason” is a value that indicates why a promise was rejected.</li>
+</ol>
+
+<h2>Requirements</h2>
+
+<h3>Promise States</h3>
+
+<p id="point-11"><a href="http://promisesaplus.com/#point-11" class="anchor"></a>A promise must be in one of three states: pending, fulfilled, or rejected.</p>
+
+<ol>
+<li id="point-12"><a href="http://promisesaplus.com/#point-12" class="anchor"></a>When pending, a promise:
+
+<ol>
+<li id="point-13"><a href="http://promisesaplus.com/#point-13" class="anchor"></a>may transition to either the fulfilled or rejected state.</li>
+</ol></li>
+<li id="point-14"><a href="http://promisesaplus.com/#point-14" class="anchor"></a>When fulfilled, a promise:
+
+<ol>
+<li id="point-15"><a href="http://promisesaplus.com/#point-15" class="anchor"></a>must not transition to any other state.</li>
+<li id="point-16"><a href="http://promisesaplus.com/#point-16" class="anchor"></a>must have a value, which must not change.</li>
+</ol></li>
+<li id="point-17"><a href="http://promisesaplus.com/#point-17" class="anchor"></a>When rejected, a promise:
+
+<ol>
+<li id="point-18"><a href="http://promisesaplus.com/#point-18" class="anchor"></a>must not transition to any other state.</li>
+<li id="point-19"><a href="http://promisesaplus.com/#point-19" class="anchor"></a>must have a reason, which must not change.</li>
+</ol></li>
+</ol>
+
+<p id="point-20"><a href="http://promisesaplus.com/#point-20" class="anchor"></a>Here, “must not change” means immutable identity (i.e. <code>===</code>), but does not imply deep immutability.</p>
+
+<h3>The <code>then</code> Method</h3>
+
+<p id="point-21"><a href="http://promisesaplus.com/#point-21" class="anchor"></a>A promise must provide a <code>then</code> method to access its current or eventual value or reason.</p>
+
+<p id="point-22"><a href="http://promisesaplus.com/#point-22" class="anchor"></a>A promise’s <code>then</code> method accepts two arguments:</p>
+<div class="highlight"><pre><code class="js language-js" data-lang="js"><span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">onFulfilled</span><span class="p">,</span> <span class="nx">onRejected</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li id="point-23"><a href="http://promisesaplus.com/#point-23" class="anchor"></a>Both <code>onFulfilled</code> and <code>onRejected</code> are optional arguments:
+
+<ol>
+<li id="point-24"><a href="http://promisesaplus.com/#point-24" class="anchor"></a>If <code>onFulfilled</code> is not a function, it must be ignored.</li>
+<li id="point-25"><a href="http://promisesaplus.com/#point-25" class="anchor"></a>If <code>onRejected</code> is not a function, it must be ignored.</li>
+</ol></li>
+<li id="point-26"><a href="http://promisesaplus.com/#point-26" class="anchor"></a>If <code>onFulfilled</code> is a function:
+
+<ol>
+<li id="point-27"><a href="http://promisesaplus.com/#point-27" class="anchor"></a>it must be called after <code>promise</code> is fulfilled, with <code>promise</code>’s value as its first argument.</li>
+<li id="point-28"><a href="http://promisesaplus.com/#point-28" class="anchor"></a>it must not be called before <code>promise</code> is fulfilled.</li>
+<li id="point-29"><a href="http://promisesaplus.com/#point-29" class="anchor"></a>it must not be called more than once.</li>
+</ol></li>
+<li id="point-30"><a href="http://promisesaplus.com/#point-30" class="anchor"></a>If <code>onRejected</code> is a function,
+
+<ol>
+<li id="point-31"><a href="http://promisesaplus.com/#point-31" class="anchor"></a>it must be called after <code>promise</code> is rejected, with <code>promise</code>’s reason as its first argument.</li>
+<li id="point-32"><a href="http://promisesaplus.com/#point-32" class="anchor"></a>it must not be called before <code>promise</code> is rejected.</li>
+<li id="point-33"><a href="http://promisesaplus.com/#point-33" class="anchor"></a>it must not be called more than once.</li>
+</ol></li>
+<li id="point-34"><a href="http://promisesaplus.com/#point-34" class="anchor"></a><code>onFulfilled</code> or <code>onRejected</code> must not be called until the <a href="http://es5.github.io/#x10.3">execution context</a> stack contains only platform code. [<a href="http://promisesaplus.com/#notes">3.1</a>].</li>
+<li id="point-35"><a href="http://promisesaplus.com/#point-35" class="anchor"></a><code>onFulfilled</code> and <code>onRejected</code> must be called as functions (i.e. with no <code>this</code> value). [<a href="http://promisesaplus.com/#notes">3.2</a>]</li>
+<li id="point-36"><a href="http://promisesaplus.com/#point-36" class="anchor"></a><code>then</code> may be called multiple times on the same promise.
+
+<ol>
+<li id="point-37"><a href="http://promisesaplus.com/#point-37" class="anchor"></a>If/when <code>promise</code> is fulfilled, all respective <code>onFulfilled</code> callbacks must execute in the order of their originating calls to <code>then</code>.</li>
+<li id="point-38"><a href="http://promisesaplus.com/#point-38" class="anchor"></a>If/when <code>promise</code> is rejected, all respective <code>onRejected</code> callbacks must execute in the order of their originating calls to <code>then</code>.</li>
+</ol></li>
+<li id="point-39"><a href="http://promisesaplus.com/#point-39" class="anchor"></a><p id="point-40"><a href="http://promisesaplus.com/#point-40" class="anchor"></a><code>then</code> must return a promise [<a href="http://promisesaplus.com/#notes">3.3</a>].</p>
+<div class="highlight"><pre><code class="js language-js" data-lang="js"><span class="nx">promise2</span> <span class="o">=</span> <span class="nx">promise1</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">onFulfilled</span><span class="p">,</span> <span class="nx">onRejected</span><span class="p">);</span>
+</code></pre></div>
+<ol>
+<li id="point-41"><a href="http://promisesaplus.com/#point-41" class="anchor"></a>If either <code>onFulfilled</code> or <code>onRejected</code> returns a value <code>x</code>, run the Promise Resolution Procedure <code>[[Resolve]](promise2, x)</code>.</li>
+<li id="point-42"><a href="http://promisesaplus.com/#point-42" class="anchor"></a>If either <code>onFulfilled</code> or <code>onRejected</code> throws an exception <code>e</code>, <code>promise2</code> must be rejected with <code>e</code> as the reason.</li>
+<li id="point-43"><a href="http://promisesaplus.com/#point-43" class="anchor"></a>If <code>onFulfilled</code> is not a function and <code>promise1</code> is fulfilled, <code>promise2</code> must be fulfilled with the same value as <code>promise1</code>.</li>
+<li id="point-44"><a href="http://promisesaplus.com/#point-44" class="anchor"></a>If <code>onRejected</code> is not a function and <code>promise1</code> is rejected, <code>promise2</code> must be rejected with the same reason as <code>promise1</code>.</li>
+</ol></li>
+</ol>
+
+<h3>The Promise Resolution Procedure</h3>
+
+<p id="point-45"><a href="http://promisesaplus.com/#point-45" class="anchor"></a>The <strong>promise resolution procedure</strong> is an abstract operation taking as input a promise and a value, which we denote as <code>[[Resolve]](promise, x)</code>. If <code>x</code> is a thenable, it attempts to make <code>promise</code> adopt the state of <code>x</code>, under the assumption that <code>x</code> behaves at least somewhat like a promise. Otherwise, it fulfills <code>promise</code> with the value <code>x</code>.</p>
+
+<p id="point-46"><a href="http://promisesaplus.com/#point-46" class="anchor"></a>This treatment of thenables allows promise implementations to interoperate, as long as they expose a Promises/A+-compliant <code>then</code> method. It also allows Promises/A+ implementations to “assimilate” nonconformant implementations with reasonable <code>then</code> methods.</p>
+
+<p id="point-47"><a href="http://promisesaplus.com/#point-47" class="anchor"></a>To run <code>[[Resolve]](promise, x)</code>, perform the following steps:</p>
+
+<ol>
+<li id="point-48"><a href="http://promisesaplus.com/#point-48" class="anchor"></a>If <code>promise</code> and <code>x</code> refer to the same object, reject <code>promise</code> with a <code>TypeError</code> as the reason.</li>
+<li id="point-49"><a href="http://promisesaplus.com/#point-49" class="anchor"></a>If <code>x</code> is a promise, adopt its state [<a href="http://promisesaplus.com/#notes">3.4</a>]:
+
+<ol>
+<li id="point-50"><a href="http://promisesaplus.com/#point-50" class="anchor"></a>If <code>x</code> is pending, <code>promise</code> must remain pending until <code>x</code> is fulfilled or rejected.</li>
+<li id="point-51"><a href="http://promisesaplus.com/#point-51" class="anchor"></a>If/when <code>x</code> is fulfilled, fulfill <code>promise</code> with the same value.</li>
+<li id="point-52"><a href="http://promisesaplus.com/#point-52" class="anchor"></a>If/when <code>x</code> is rejected, reject <code>promise</code> with the same reason.</li>
+</ol></li>
+<li id="point-53"><a href="http://promisesaplus.com/#point-53" class="anchor"></a>Otherwise, if <code>x</code> is an object or function,
+
+<ol>
+<li id="point-54"><a href="http://promisesaplus.com/#point-54" class="anchor"></a>Let <code>then</code> be <code>x.then</code>. [<a href="http://promisesaplus.com/#notes">3.5</a>]</li>
+<li id="point-55"><a href="http://promisesaplus.com/#point-55" class="anchor"></a>If retrieving the property <code>x.then</code> results in a thrown exception <code>e</code>, reject <code>promise</code> with <code>e</code> as the reason.</li>
+<li id="point-56"><a href="http://promisesaplus.com/#point-56" class="anchor"></a>If <code>then</code> is a function, call it with <code>x</code> as <code>this</code>, first argument <code>resolvePromise</code>, and second argument <code>rejectPromise</code>, where:
+
+<ol>
+<li id="point-57"><a href="http://promisesaplus.com/#point-57" class="anchor"></a>If/when <code>resolvePromise</code> is called with a value <code>y</code>, run <code>[[Resolve]](promise, y)</code>.</li>
+<li id="point-58"><a href="http://promisesaplus.com/#point-58" class="anchor"></a>If/when <code>rejectPromise</code> is called with a reason <code>r</code>, reject <code>promise</code> with <code>r</code>.</li>
+<li id="point-59"><a href="http://promisesaplus.com/#point-59" class="anchor"></a>If both <code>resolvePromise</code> and <code>rejectPromise</code> are called, or multiple calls to the same argument are made, the first call takes precedence, and any further calls are ignored.</li>
+<li id="point-60"><a href="http://promisesaplus.com/#point-60" class="anchor"></a>If calling <code>then</code> throws an exception <code>e</code>,
+
+<ol>
+<li id="point-61"><a href="http://promisesaplus.com/#point-61" class="anchor"></a>If <code>resolvePromise</code> or <code>rejectPromise</code> have been called, ignore it.</li>
+<li id="point-62"><a href="http://promisesaplus.com/#point-62" class="anchor"></a>Otherwise, reject <code>promise</code> with <code>e</code> as the reason.</li>
+</ol></li>
+</ol></li>
+<li id="point-63"><a href="http://promisesaplus.com/#point-63" class="anchor"></a>If <code>then</code> is not a function, fulfill <code>promise</code> with <code>x</code>.</li>
+</ol></li>
+<li id="point-64"><a href="http://promisesaplus.com/#point-64" class="anchor"></a>If <code>x</code> is not an object or function, fulfill <code>promise</code> with <code>x</code>.</li>
+</ol>
+
+<p id="point-65"><a href="http://promisesaplus.com/#point-65" class="anchor"></a>If a promise is resolved with a thenable that participates in a circular thenable chain, such that the recursive nature of <code>[[Resolve]](promise, thenable)</code> eventually causes <code>[[Resolve]](promise, thenable)</code> to be called again, following the above algorithm will lead to infinite recursion. Implementations are encouraged, but not required, to detect such recursion and reject <code>promise</code> with an informative <code>TypeError</code> as the reason. [<a href="http://promisesaplus.com/#notes">3.6</a>]</p>
+
+<h2>Notes</h2>
+
+<ol>
+<li id="point-66"><a href="http://promisesaplus.com/#point-66" class="anchor"></a><p id="point-67"><a href="http://promisesaplus.com/#point-67" class="anchor"></a>Here “platform code” means engine, environment, and promise implementation code. In practice, this requirement ensures that <code>onFulfilled</code> and <code>onRejected</code> execute asynchronously, after the event loop turn in which <code>then</code> is called, and with a fresh stack. This can be implemented with either a “macro-task” mechanism such as <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/timers.html#timers"><code>setTimeout</code></a> or <a href="https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html#processingmodel"><code>setImmediate</code></a>, or with a “micro-task” mechanism such as <a href="http://dom.spec.whatwg.org/#interface-mutationobserver"><code>MutationObserver</code></a> or <a href="http://nodejs.org/api/process.html#process_process_nexttick_callback"><code>process.nextTick</code></a>. Since the promise implementation is considered platform code, it may itself contain a task-scheduling queue or “trampoline” in which the handlers are called.</p></li>
+<li id="point-68"><a href="http://promisesaplus.com/#point-68" class="anchor"></a><p id="point-69"><a href="http://promisesaplus.com/#point-69" class="anchor"></a>That is, in strict mode <code>this</code> will be <code>undefined</code> inside of them; in sloppy mode, it will be the global object.</p></li>
+<li id="point-70"><a href="http://promisesaplus.com/#point-70" class="anchor"></a><p id="point-71"><a href="http://promisesaplus.com/#point-71" class="anchor"></a>Implementations may allow <code>promise2 === promise1</code>, provided the implementation meets all requirements. Each implementation should document whether it can produce <code>promise2 === promise1</code> and under what conditions.</p></li>
+<li id="point-72"><a href="http://promisesaplus.com/#point-72" class="anchor"></a><p id="point-73"><a href="http://promisesaplus.com/#point-73" class="anchor"></a>Generally, it will only be known that <code>x</code> is a true promise if it comes from the current implementation. This clause allows the use of implementation-specific means to adopt the state of known-conformant promises.</p></li>
+<li id="point-74"><a href="http://promisesaplus.com/#point-74" class="anchor"></a><p id="point-75"><a href="http://promisesaplus.com/#point-75" class="anchor"></a>This procedure of first storing a reference to <code>x.then</code>, then testing that reference, and then calling that reference, avoids multiple accesses to the <code>x.then</code> property. Such precautions are important for ensuring consistency in the face of an accessor property, whose value could change between retrievals.</p></li>
+<li id="point-76"><a href="http://promisesaplus.com/#point-76" class="anchor"></a><p id="point-77"><a href="http://promisesaplus.com/#point-77" class="anchor"></a>Implementations should <em>not</em> set arbitrary limits on the depth of thenable chains, and assume that beyond that arbitrary limit the recursion will be infinite. Only true cycles should lead to a <code>TypeError</code>; if an infinite chain of distinct thenables is encountered, recursing forever is the correct behavior.</p></li>
+</ol>
+
+<hr>
+
+<p xmlns:dct="http://purl.org/dc/terms/" xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#" id="point-78"><a href="http://promisesaplus.com/#point-78" class="anchor"></a>
+  <a rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/">
+    <img src="88x31.png" style="border-style: none;" alt="CC0">
+  </a>
+  <br>
+  To the extent possible under law,
+  <a rel="dct:publisher" href="https://github.com/promises-aplus">
+    <span property="dct:title">the Promises/A+ organization</span></a>
+  has waived all copyright and related or neighboring rights to
+  <span property="dct:title">Promises/A+ Promise Specification</span>.
+This work is published from:
+<span property="vcard:Country" datatype="dct:ISO3166" content="US" about="https://github.com/promises-aplus">
+  United States</span>.
+</p>
+
+
+    <footer>
+      <a href="saved_resource.html">Specification</a>
+      <a href="http://promisesaplus.com/changelog">Changelog</a>
+      <a href="http://promisesaplus.com/credits">Credits</a>
+      <a href="http://promisesaplus.com/differences-from-promises-a">Differences from Promises/A</a>
+      <a href="http://promisesaplus.com/implementations">Implementations</a>
+      <a href="https://github.com/promises-aplus/promises-tests">Compliance Tests</a>
+      <a href="https://github.com/promises-aplus">GitHub organization</a>
+    </footer>
+    <script src="linker.js"></script>
+  
+
+</body></html>
